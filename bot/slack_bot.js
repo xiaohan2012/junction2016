@@ -267,17 +267,7 @@ wsServer.on('connect', function(connection) {
 
 	    // check appointment
 	    var employee_id = 'U376YFTGT';  // employee, hoang
-	    var time = 'some time';
 
-	    var message = { type: 'message',
-		  channel: 'D36JGQ55X',
-		  user: 'U37V2PSB1',
-		  text: '',
-		  ts: '1480159611.000056',
-		  team: 'T37AUFAHJ',
-		  event: 'direct_message'
-		};
-	    
 	    // send msg to employee
 	    controller.storage.users.get(employee_id, function(err, user) {
 		if (!user) {
@@ -286,13 +276,13 @@ wsServer.on('connect', function(connection) {
 		    };
 		}
 		console.log('what the hell');
-		user.name = 'Hoang';
 
 		var token = process.env.token;
 		bot.api.callAPI('chat.postMessage',
 				{'token': token,
 				 'channel': 'D36H7J9J4',
-				 'text': visitor_name + ' wants to meet you at ' + time},
+				 'text': visitor_name + ' have an apporintment with you in 1 minute. \n' +
+				 'Can you come by then?'},
 				function(obj){
 				    console.log(obj);						
 				})
