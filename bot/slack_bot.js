@@ -1,84 +1,22 @@
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-           ______     ______     ______   __  __     __     ______
-          /\  == \   /\  __ \   /\__  _\ /\ \/ /    /\ \   /\__  _\
-          \ \  __<   \ \ \/\ \  \/_/\ \/ \ \  _"-.  \ \ \  \/_/\ \/
-           \ \_____\  \ \_____\    \ \_\  \ \_\ \_\  \ \_\    \ \_\
-            \/_____/   \/_____/     \/_/   \/_/\/_/   \/_/     \/_/
-
-
-This is a sample Slack bot built with Botkit.
-
-This bot demonstrates many of the core features of Botkit:
-
-* Connect to Slack using the real time API
-* Receive messages based on "spoken" patterns
-* Reply to messages
-* Use the conversation system to ask questions
-* Use the built in storage system to store and retrieve information
-  for a user.
-
-# RUN THE BOT:
-
-  Get a Bot token from Slack:
-
-    -> http://my.slack.com/services/new/bot
-
-  Run your bot from the command line:
-
-    token=<MY TOKEN> node slack_bot.js
-
-# USE THE BOT:
-
-  Find your bot inside Slack to send it a direct message.
-
-  Say: "Hello"
-
-  The bot will reply "Hello!"
-
-  Say: "who are you?"
-
-  The bot will tell you its name, where it is running, and for how long.
-
-  Say: "Call me <nickname>"
-
-  Tell the bot your nickname. Now you are friends.
-
-  Say: "who am I?"
-
-  The bot will tell you your nickname, if it knows one for you.
-
-  Say: "shutdown"
-
-  The bot will ask if you are sure, and then shut itself down.
-
-  Make sure to invite your bot into other channels using /invite @<my bot>!
-
-# EXTEND THE BOT:
-
-  Botkit has many features for building cool and useful bots!
-
-  Read all about it here:
-
-    -> http://howdy.ai/botkit
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
 
 if (!process.env.token) {
     console.log('Error: Specify token in environment');
     process.exit(1);
 }
 
-var Botkit = require('./node_modules/botkit/lib/Botkit.js');
+var Botkit = require('botkit');
 var os = require('os');
 
 var controller = Botkit.slackbot({
     debug: true,
+    // debug: false
 });
 
 var bot = controller.spawn({
     token: process.env.token
 }).startRTM();
+
+var employee_id = 'U376YFTGT';
 
 
 controller.hears(['hello', 'hi'], 'direct_message,direct_mention,mention', function(bot, message) {
@@ -112,8 +50,6 @@ controller.hears(['call me (.*)', 'my name is (.*)'], 'direct_message,direct_men
             };
         }
         user.name = name;
-
-
 	
         controller.storage.users.save(user, function(err, id) {
             bot.reply(message, 'Got it. I will call you ' + user.name + ' from now on.');
@@ -251,9 +187,11 @@ controller.hears(['meeting with (.*)','appointment with (.*)', 'reservation with
 });
 
 controller.hears(("confirm meeting"), 'direct_message,direct_mention,mention', function(bot,message) {
-    controller.storage.users.get(message.user, function(err, user){
+    console.log("XXXXXXXXXXXXXXXXXXXX");
+    controller.storage.users.get(employee_id, function(err, user){
+        console.log("AAAAAAAAAAAAAAAAAAAAAAAA");
         bot.reply(message,
-        'You have confirm your meeting with ' + user.guestName + '. Where is the meeting place?');    
+        'You have confirm your meeting with ' + user.visitor_name + '. Where is the meeting place?');    
     });
     
 });
@@ -293,3 +231,101 @@ function formatUptime(uptime) {
     uptime = uptime + ' ' + unit;
     return uptime;
 }
+
+
+
+/******************************
+********** Web socket server ************
+*****************************/
+
+var WebSocketServer = require('websocket').server;
+var http = require('http');
+
+var server = http.createServer(function(request, response) {
+    // process HTTP request. Since we're writing just WebSockets server
+    // we don't have to implement anything.
+    console.log('creating WS server...')
+});
+server.listen(1337, function() {
+});
+
+// create the server
+wsServer = new WebSocketServer({
+    httpServer: server,
+    autoAcceptConnections: true
+});
+
+// WebSocket server
+wsServer.on('connect', function(connection) {
+    console.log('new connection');
+    
+    // This is the most important callback for us, we'll handle
+    // all messages from users here.
+    connection.on('message', function(message) {
+    	console.log('new message', message);
+    	var data = JSON.parse(message['utf8Data']);
+    	var type = data['type'];
+    	if(data['type'] == 'id'){
+        	    var visitor_name = data['id'];
+        	    console.log('new id', data['id']);
+
+        	    // check appointment
+        	      // employee, hoang
+        	    var time = 'some time';
+
+        	    var message = { type: 'message',
+        		  channel: 'D36JGQ55X',
+        		  user: 'U37V2PSB1',
+        		  text: '',
+        		  ts: '1480159611.000056',
+        		  team: 'T37AUFAHJ',
+        		  event: 'direct_message'
+        		};
+        	    
+        	    // send msg to employee
+        	    controller.storage.users.get(employee_id, function(err, user) {
+        		if (!user) {
+        		    user = {
+        			id: employee_id,
+        		    };
+        		}
+        		console.log('what the hell');
+        		user.name = 'Hoang';
+
+                user.visitor_name = visitor_name; 
+
+                controller.storage.users.save(employee_id, function(err,user){
+                    console.log('user.visitor_name is saved');
+                });
+
+        		var token = process.env.token;
+        		bot.api.callAPI('chat.postMessage',
+        				{'token': token,
+        				 'channel': 'D36H7J9J4',
+        				 'text': user.visitor_name + ' wants to meet you at ' + time},
+        				function(obj){
+        				    console.log(obj);						
+        				})
+        		// bot.sendWebhook({
+        		//     text: visitor_name + ' wants to meet you at ' + time,
+        		//     channel: '#general',		    
+        		// },function(err,res) {
+        		//     // handle error
+        		//     console.log(err);
+        		// });		
+        		// controller.storage.users.save(user, function(err, id) {
+        		//     bot.reply(message, visitor_name + ' wants to meet you at ' + time);
+        		//     console.log('-----err', err);
+        		//     console.log('-----id', id);
+        		// });
+            });	    
+    	}
+    });
+
+    connection.on('close', function(connection) {
+	// close user connection
+	
+    });
+    
+});
+

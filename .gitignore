@@ -5,3 +5,5 @@ build
 
 node_modules
 *~
+bot/run.sh
+smoothie-app/js/app.js

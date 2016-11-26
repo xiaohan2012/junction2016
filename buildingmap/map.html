@@ -78,18 +78,18 @@
 
     }
 
-    drawmap("imgs/floor_map.jpg");
+    drawmap("imgs/1stfloormap.jpg");
 
       d3.selectAll("#opts")
         .on('change', function() {
         var ID = d3.select(this).property('value');
         if (ID == "1stfloor"){
           d3.select("svg").remove();
-          drawmap("imgs/floor_map.jpg")
+          drawmap("imgs/1stfloormap.jpg")
         }
         else if (ID == "2ndfloor"){
           d3.select("svg").remove();
-          drawmap("imgs/floor_map.jpg")
+          drawmap("imgs/2ndfloormap.jpg")
 
         }
                          

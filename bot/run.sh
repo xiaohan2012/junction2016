@@ -1,2 +1,3 @@
-token=xoxb-109236537571-rgtxk9xak59hOYUM5fKmQGvQ node slack_bot.js
+#! /bin/bash
+token=xoxb-109292530850-lMkZQXnUoJKWSMAtgvRIUWBC node slack_bot.js
 
