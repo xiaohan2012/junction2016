@@ -16,6 +16,8 @@ var bot = controller.spawn({
     token: process.env.token
 }).startRTM();
 
+var employee_id = 'U376YFTGT';
+
 
 controller.hears(['hello', 'hi'], 'direct_message,direct_mention,mention', function(bot, message) {
 
@@ -185,9 +187,11 @@ controller.hears(['meeting with (.*)','appointment with (.*)', 'reservation with
 });
 
 controller.hears(("confirm meeting"), 'direct_message,direct_mention,mention', function(bot,message) {
-    controller.storage.users.get(message.user, function(err, user){
+    console.log("XXXXXXXXXXXXXXXXXXXX");
+    controller.storage.users.get(employee_id, function(err, user){
+        console.log("AAAAAAAAAAAAAAAAAAAAAAAA");
         bot.reply(message,
-        'You have confirm your meeting with ' + user.guestName + '. Where is the meeting place?');    
+        'You have confirm your meeting with ' + user.visitor_name + '. Where is the meeting place?');    
     });
     
 });
@@ -258,58 +262,64 @@ wsServer.on('connect', function(connection) {
     // This is the most important callback for us, we'll handle
     // all messages from users here.
     connection.on('message', function(message) {
-	console.log('new message', message);
-	var data = JSON.parse(message['utf8Data']);
-	var type = data['type'];
-	if(data['type'] == 'id'){
-	    var visitor_name = data['id'];
-	    console.log('new id', data['id']);
+    	console.log('new message', message);
+    	var data = JSON.parse(message['utf8Data']);
+    	var type = data['type'];
+    	if(data['type'] == 'id'){
+        	    var visitor_name = data['id'];
+        	    console.log('new id', data['id']);
 
-	    // check appointment
-	    var employee_id = 'U376YFTGT';  // employee, hoang
-	    var time = 'some time';
+        	    // check appointment
+        	      // employee, hoang
+        	    var time = 'some time';
 
-	    var message = { type: 'message',
-		  channel: 'D36JGQ55X',
-		  user: 'U37V2PSB1',
-		  text: '',
-		  ts: '1480159611.000056',
-		  team: 'T37AUFAHJ',
-		  event: 'direct_message'
-		};
-	    
-	    // send msg to employee
-	    controller.storage.users.get(employee_id, function(err, user) {
-		if (!user) {
-		    user = {
-			id: employee_id,
-		    };
-		}
-		console.log('what the hell');
-		user.name = 'Hoang';
+        	    var message = { type: 'message',
+        		  channel: 'D36JGQ55X',
+        		  user: 'U37V2PSB1',
+        		  text: '',
+        		  ts: '1480159611.000056',
+        		  team: 'T37AUFAHJ',
+        		  event: 'direct_message'
+        		};
+        	    
+        	    // send msg to employee
+        	    controller.storage.users.get(employee_id, function(err, user) {
+        		if (!user) {
+        		    user = {
+        			id: employee_id,
+        		    };
+        		}
+        		console.log('what the hell');
+        		user.name = 'Hoang';
 
-		var token = process.env.token;
-		bot.api.callAPI('chat.postMessage',
-				{'token': token,
-				 'channel': 'D36H7J9J4',
-				 'text': visitor_name + ' wants to meet you at ' + time},
-				function(obj){
-				    console.log(obj);						
-				})
-		// bot.sendWebhook({
-		//     text: visitor_name + ' wants to meet you at ' + time,
-		//     channel: '#general',		    
-		// },function(err,res) {
-		//     // handle error
-		//     console.log(err);
-		// });		
-		// controller.storage.users.save(user, function(err, id) {
-		//     bot.reply(message, visitor_name + ' wants to meet you at ' + time);
-		//     console.log('-----err', err);
-		//     console.log('-----id', id);
-		// });
-    });	    
-	}
+                user.visitor_name = visitor_name; 
+
+                controller.storage.users.save(employee_id, function(err,user){
+                    console.log('user.visitor_name is saved');
+                });
+
+        		var token = process.env.token;
+        		bot.api.callAPI('chat.postMessage',
+        				{'token': token,
+        				 'channel': 'D36H7J9J4',
+        				 'text': user.visitor_name + ' wants to meet you at ' + time},
+        				function(obj){
+        				    console.log(obj);						
+        				})
+        		// bot.sendWebhook({
+        		//     text: visitor_name + ' wants to meet you at ' + time,
+        		//     channel: '#general',		    
+        		// },function(err,res) {
+        		//     // handle error
+        		//     console.log(err);
+        		// });		
+        		// controller.storage.users.save(user, function(err, id) {
+        		//     bot.reply(message, visitor_name + ' wants to meet you at ' + time);
+        		//     console.log('-----err', err);
+        		//     console.log('-----id', id);
+        		// });
+            });	    
+    	}
     });
 
     connection.on('close', function(connection) {
