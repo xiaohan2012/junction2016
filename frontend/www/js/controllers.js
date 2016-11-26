@@ -5,7 +5,7 @@ angular.module('starter.controllers', [])
     method: 'GET',
     url: 'http://ufibp.tech:9876/buildingStats/temperature'
   }).success(function (data) {
-    console.log('temperature', data);
+    $scope.temp = data;
   });
   // $http.get('http://api.ufibp.tech:9876/buildingStats/temperature').then(function (data) {
   //   console.log('data', data);
@@ -52,7 +52,7 @@ angular.module('starter.controllers', [])
   var that = this;
 
   window.WebSocket = window.WebSocket || window.MozWebSocket;
-  window.ws = new WebSocket('ws://localhost:1337');
+  window.ws = new WebSocket('ws://ufibp.tech:1337');
   ws.onopen = function () {
     // ws is opened and ready to use
     console.log('ws open')
