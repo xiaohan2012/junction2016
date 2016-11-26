@@ -69,14 +69,24 @@
         .style("position", "absolute")
         .style("z-index", "25")
         .style("visibility", "hidden")
-        .text("You are here!");
+        .style("background", "lightsteelblue")
+        .style("padding", "10px")      
+        .style("border-radius", "8px")
+        .text("You are here!")
+        .style("font-size", "15px")
+        .style("font-weight", "bold")
 
       var tooltip_end = d3.select("body")
         .append("div")
         .style("position", "absolute")
         .style("z-index", "25")
         .style("visibility", "hidden")
-        .text("Room meeting!");
+        .style("background", "lightsteelblue")
+        .style("padding", "10px")      
+        .style("border-radius", "8px")
+        .text("Room meeting!")
+        .style("font-size", "15px")
+        .style("font-weight", "bold");
 
       d3.json("data/demo-data.json", function(data) {
 
