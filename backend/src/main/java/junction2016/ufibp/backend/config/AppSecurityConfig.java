@@ -33,7 +33,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {;
     protected void configure(HttpSecurity http) throws Exception {
 
         http.
-                csrf().disable().
+                //csrf().disable().
                 sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 //and().
                 //anonymous().disable().
