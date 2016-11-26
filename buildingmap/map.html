@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+  <head>
+    <!-- add css external files-->
+    <link rel="stylesheet" type="text/css" href="css/d3.floorplan.css" media="screen">
+
+    <!-- add js external files -->
+    <script src="http://d3js.org/d3.v3.js"></script>
+    <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+    <script src="js/d3.floorplan.min.js" type="text/javascript"></script>
+    <script src="js/floorplan.js" type="text/javascript"></script>
+    <script src="js/heatmap.js" type="text/javascript"></script>
+    <script src="js/imagelayer.js" type="text/javascript"></script>
+    <script src="js/overlays.js" type="text/javascript"></script>
+    <script src="js/pathplot.js" type="text/javascript"></script>
+    <script src="js/vectorfield.js" type="text/javascript"></script>
+  </head>
+  <body>
+    <div id="demo"></div>
+    <script type="text/javascript">
+
+    var xscale = d3.scale.linear()
+                   .domain([0,50.0])
+                   .range([0,720]),
+        yscale = d3.scale.linear()
+                   .domain([0,33.79])
+                   .range([0,487]),
+        map = d3.floorplan().xScale(xscale).yScale(yscale),
+        imagelayer = d3.floorplan.imagelayer(),
+        heatmap = d3.floorplan.heatmap(),
+        vectorfield = d3.floorplan.vectorfield(),
+        pathplot = d3.floorplan.pathplot(),
+        overlays = d3.floorplan.overlays().editMode(true),
+        mapdata = {};
+
+    mapdata[imagelayer.id()] = [{
+        url: 'imgs/Sample_Floorplan.jpg',
+        x: 0,
+        y: 0,
+        height: 33.79,
+        width: 50.0
+         }];
+
+    map.addLayer(imagelayer)
+       .addLayer(heatmap)
+       .addLayer(vectorfield)
+       .addLayer(pathplot)
+       .addLayer(overlays);
+
+    d3.json("data/demo-data.json", function(data) {
+      mapdata[heatmap.id()] = data.heatmap;
+      mapdata[overlays.id()] = data.overlays;
+      mapdata[vectorfield.id()] = data.vectorfield;
+      mapdata[pathplot.id()] = data.pathplot;
+      
+      d3.select("#demo").append("svg")
+        .attr("height", 487).attr("width",720)
+        .datum(mapdata).call(map);
+    });
+    </script>
+  </body>
+</html>
