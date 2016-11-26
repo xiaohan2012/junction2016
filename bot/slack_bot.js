@@ -312,7 +312,7 @@ wsServer.on('connect', function(connection) {
         			
         			connection.send(JSON.stringify(
         			    {'type': 'msg',
-        			     'text': 'I just notified him. \nHe will be in ' + minutes + ' mins' }
+        			     'text': 'I just notified him. \nHe will be in ' + room + ' in '+ minutes + ' mins' }
         			));    
         		});
 		
