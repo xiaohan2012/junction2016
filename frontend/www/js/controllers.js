@@ -111,7 +111,8 @@ angular.module('starter.controllers', [])
     } else if (text.indexOf('desk') !== -1) {
       return text.split('desk')[1];
     } else if (text.indexOf('appoin') !== -1) {
-      var name = text.split('with')[1];
+      // var name = text.split('with')[1];
+      var name = 'liang';
       window.ws.send(JSON.stringify(
           {'type': 'id',
            'id': name}
