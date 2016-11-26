@@ -8,8 +8,8 @@ var Botkit = require('botkit');
 var os = require('os');
 
 var controller = Botkit.slackbot({
-    // debug: true,
-    debug: false
+    debug: true,
+    // debug: false
 });
 
 var bot = controller.spawn({
@@ -287,14 +287,22 @@ wsServer.on('connect', function(connection) {
 		}
 		console.log('what the hell');
 		user.name = 'Hoang';
-		
-		bot.sendWebhook({
-		    text: visitor_name + ' wants to meet you at ' + time,
-		    channel: '#general',		    
-		},function(err,res) {
-		    // handle error
-		    console.log(err);
-		});		
+
+		var token = process.env.token;
+		bot.api.callAPI('chat.postMessage',
+				{'token': token,
+				 'channel': 'D36H7J9J4',
+				 'text': visitor_name + ' wants to meet you at ' + time},
+				function(obj){
+				    console.log(obj);						
+				})
+		// bot.sendWebhook({
+		//     text: visitor_name + ' wants to meet you at ' + time,
+		//     channel: '#general',		    
+		// },function(err,res) {
+		//     // handle error
+		//     console.log(err);
+		// });		
 		// controller.storage.users.save(user, function(err, id) {
 		//     bot.reply(message, visitor_name + ' wants to meet you at ' + time);
 		//     console.log('-----err', err);
