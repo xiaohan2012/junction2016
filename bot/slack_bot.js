@@ -142,14 +142,14 @@ controller.hears(['shutdown'], 'direct_message,direct_mention,mention', function
                     }, 3000);
                 }
             },
-        {
-            pattern: bot.utterances.no,
-            default: true,
-            callback: function(response, convo) {
-                convo.say('*Phew!*');
-                convo.next();
+            {
+                pattern: bot.utterances.no,
+                default: true,
+                callback: function(response, convo) {
+                    convo.say('*Phew!*');
+                    convo.next();
+                }
             }
-        }
         ]);
     });
 });
@@ -293,28 +293,81 @@ wsServer.on('connect', function(connection) {
             			    console.log(obj);						
 
             			})
-
-        		controller.hears(("confirm"), 'direct_message,direct_mention,mention', function(bot,message) {
-        			bot.reply(message,
-        				  'Great! ' + user.visitor_name + ' will meet you in ' + room + '!');
-        		    connection.send(JSON.stringify(
-                        {
-                            'type': 'msg',
-                            'text': 'He is on his way. \nSee you in ' + room
+                controller.hears(("confirm"), 'direct_message,direct_mention,mention', function(bot,message) {
+                    bot.startConversation(message, function(err, convo) {
+                        convo.ask('Great! Do you want to change time or meeting place?', function(response, convo){
+                            convo.next();
+                            if(response.text === "time"){
+                                
+                                bot.startConversation(message, function(err,convo){
+                                    convo.ask('How long you will be late for the meeting?', function(response, convo){
+                                        convo.next();
+                                        convo.say('Ok. ' + ' I will tell him and see you in ' + room + ' in ' + response.text + ' mins');
+                                        connection.send(JSON.stringify(
+                                            {
+                                                'type': 'msg',
+                                                'text': 'He is on his way. \nSee you in ' + room + ' in ' + response.text + ' mins'
+                                            }
+                                        ));
+                                    });
+                                });    
+                            } else if(response.text === 'place') {
+                                bot.startConversation(message, function(err,convo){
+                                    convo.ask('You want to meet him in the old room or you want to pick him up?', function(response,convo){
+                                        convo.next();
+                                        if(response.text === "old room"){
+                                            convo.say('Great! ' + user.visitor_name + ' will meet you in ' + room + '!');
+                                            connection.send(JSON.stringify(
+                                                {
+                                                    'type': 'msg',
+                                                    'text': 'He is on his way. \nSee you in ' + room
+                                                }
+                                            ));
+                                        } else if(response.text==="pick him up"){
+                                            convo.say('Great! ' + user.visitor_name + ' will meet you in the lobby!');
+                                            connection.send(JSON.stringify(
+                                                {
+                                                    'type': 'msg',
+                                                    'text': 'He is on his way to pick you up. Please wait in the lobby!'
+                                                }
+                                            ));
+                                        }                        
+                                    });
+                                    convo.next();                    
+                                });    
+                            } else if(response.text === "no"){
+                                bot.reply(message,'Great! ' + user.visitor_name + ' will meet you in ' + room + '!');
+                                connection.send(JSON.stringify(
+                                    {
+                                        'type': 'msg',
+                                        'text': 'He is on his way. \nSee you in ' + room
+                                    }
+                                ));
+                            }
                         }
-        		    ));
-        		});		
+                    )});
+                });
+
         		
-        		controller.hears(["(.*) mins"], 'direct_message,direct_mention,mention', function(bot,message) {
-        		    var minutes = message.match[1];
-        			bot.reply(message,
-        				  'Ok. ' + ' I will tell him and see you in ' + room + ' in ' + minutes + ' mins');
+              //       bot.reply(message,
+        				  // 'Great! ' + user.visitor_name + ' will meet you in ' + room + '!');
+        		    // connection.send(JSON.stringify(
+              //           {
+              //               'type': 'msg',
+              //               'text': 'He is on his way. \nSee you in ' + room
+              //           }
+        		    // ));
+        		
+        		// controller.hears(["(.*) mins"], 'direct_message,direct_mention,mention', function(bot,message) {
+        		//     var minutes = message.match[1];
+        		// 	bot.reply(message,
+        		// 		  'Ok. ' + ' I will tell him and see you in ' + room + ' in ' + minutes + ' mins');
         			
-        			connection.send(JSON.stringify(
-        			    {'type': 'msg',
-        			     'text': 'I just notified him. \nHe will be in ' + minutes + ' mins' }
-        			));    
-        		});
+        		// 	connection.send(JSON.stringify(
+        		// 	    {'type': 'msg',
+        		// 	     'text': 'I just notified him. \nHe will be in ' + minutes + ' mins' }
+        		// 	));    
+        		// });
 		
             });	    
     	}
