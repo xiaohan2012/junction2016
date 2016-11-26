@@ -21,6 +21,10 @@ angular.module('starter.controllers', [])
   //boot view implement here
 })
 
+.controller('OnlineUserCtrl', function ($scope) {
+
+})
+
 .controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
   $scope.chat = Chats.get($stateParams.chatId);
 })
