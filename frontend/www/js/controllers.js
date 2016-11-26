@@ -5,7 +5,7 @@ angular.module('starter.controllers', [])
     method: 'GET',
     url: 'http://ufibp.tech:9876/buildingStats/temperature'
   }).success(function (data) {
-    console.log('temperature', data);
+    $scope.temp = data;
   });
   // $http.get('http://api.ufibp.tech:9876/buildingStats/temperature').then(function (data) {
   //   console.log('data', data);
@@ -52,7 +52,7 @@ angular.module('starter.controllers', [])
   var that = this;
 
   window.WebSocket = window.WebSocket || window.MozWebSocket;
-  window.ws = new WebSocket('ws://localhost:1337');
+  window.ws = new WebSocket('ws://ufibp.tech:1337');
   ws.onopen = function () {
     // ws is opened and ready to use
     console.log('ws open')
@@ -111,7 +111,8 @@ angular.module('starter.controllers', [])
     } else if (text.indexOf('desk') !== -1) {
       return text.split('desk')[1];
     } else if (text.indexOf('appoin') !== -1) {
-      var name = text.split('with')[1];
+      // var name = text.split('with')[1];
+      var name = 'liang';
       window.ws.send(JSON.stringify(
           {'type': 'id',
            'id': name}
