@@ -1,0 +1,17 @@
+<ion-view view-title="Reception Bot">
+  <ion-content class="padding" start-y="120">
+    <ol class="messages">
+      <li ng-repeat="message in messages">
+        <p>{{message}}</p>
+      </li>
+    </ol>
+  </ion-content>
+  <ion-footer-bar class="bar-frosted">
+  <label class="item-input-wrapper">
+    <input type="text" ng-model="content" placeholder="What do you want to ask?" style="background: transparent; width: 100%;">
+  </label>
+  <button class="button button-small" ng-click="add(content)">
+    Submit
+  </button>
+  </ion-footer-bar>
+</ion-view>

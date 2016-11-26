@@ -163,6 +163,53 @@ controller.hears(['uptime', 'identify yourself', 'who are you', 'what is your na
 
     });
 
+controller.hears(['meeting with (.*)','appointment with (.*)', 'reservation with (.*)'], 
+    'direct_message,direct_mention,mention', function(bot,message) {
+        console.log("message, ", message);
+        var guestName = message.match[1];
+        console.log("XXXXXXXXXX, ", guestName);
+        controller.storage.users.get(message.user, function(err, user) {
+            if (!user) {
+                    user = {
+                        id: message.user,
+                    };
+            }
+            user.guestName = guestName;
+
+
+
+            controller.storage.users.save(user, function(err, id) {
+                    bot.reply(message, 'Hello, you have a meeting or reservation, your guest is here. His name is ' + user.guestName + ' .Please confirm your meeting appointment.');
+            });
+        });
+});
+
+controller.hears(("confirm meeting"), 'direct_message,direct_mention,mention', function(bot,message) {
+    controller.storage.users.get(message.user, function(err, user){
+        bot.reply(message,
+        'You have confirm your meeting with ' + user.guestName + '. Where is the meeting place?');    
+    });
+    
+});
+
+controller.hears(['room (.*)'], 'direct_message,direct_mention,mention', function(bot,message){
+    var room = message.match[1];
+    controller.storage.users.get(message.user, function(err, user){
+        if (!user) {
+            user = {
+                id: message.user,
+            };
+        }
+        user.room = room;
+
+        controller.storage.users.save(user, function(err, id) {
+            bot.reply(message,
+            'Great! I will contact the guest and they will meet you at room ' + user.room + '.');
+        });
+    });
+    
+});
+
 function formatUptime(uptime) {
     var unit = 'second';
     if (uptime > 60) {

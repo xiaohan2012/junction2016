@@ -17,8 +17,8 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('BotCtrl', function ($scope) {
-  //boot view implement here
+.controller('OnlineUserCtrl', function ($scope) {
+
 })
 
 .controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
@@ -29,4 +29,18 @@ angular.module('starter.controllers', [])
   $scope.settings = {
     enableFriends: true
   };
+})
+
+.controller('BotCtrl', function($scope, $ionicFrostedDelegate, $ionicScrollDelegate, $rootScope) {
+ 
+  var messageIter = 0;
+  $scope.messages = [
+    'hello, i\'m the Reception Bot, what can I help you?',
+    'hi'
+  ];
+
+  $scope.add = function (text) {
+    $scope.messages.push(text);
+    $scope.content = '';
+  }
 });
