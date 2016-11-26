@@ -50,6 +50,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     }
   })
 
+  .state('tab.bot', {
+    url: '/bot',
+    view: {
+      'tab-bot': {
+        templateUrl: 'templates/tab-bot.html',
+        controller: 'BotCtrl'
+      }
+    }
+  })
+
   .state('tab.chats', {
       url: '/chats',
       views: {
