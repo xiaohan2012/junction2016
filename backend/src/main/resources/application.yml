@@ -1,0 +1,13 @@
+spring.profiles: dev
+# use local or embedded mongodb at localhost:27017
+spring.data.mongodb.uri: mongodb://localhost:27017/ufibp
+logging:
+  pattern:
+    console: "%d %-5level [%thread] %logger : %msg%n"
+  level:
+    junction2016.ufibp.backend: DEBUG
+    org.springframework.web.client: DEBUG
+    org.mongodb: WARN
+whatever: whatever
+---
+spring.profiles: production

@@ -25,7 +25,7 @@ repositories {
 
 // tag::jar[]
 jar {
-    baseName = 'foib.backend'
+    baseName = 'junction2016.ufibp.backend'
     version =  '0.1.0'
 }
 // end::jar[]
