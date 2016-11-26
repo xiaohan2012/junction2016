@@ -3,7 +3,7 @@ angular.module('starter.controllers', [])
 .controller('DashCtrl', function($scope, $http) {
   $http({
     method: 'GET',
-    url: 'http://api.ufibp.tech:9876/buildingStats/temperature'
+    url: 'http://ufibp.tech:9876/buildingStats/temperature'
   }).success(function (data) {
     console.log('temperature', data);
   });
@@ -52,7 +52,7 @@ angular.module('starter.controllers', [])
   var that = this;
 
   window.WebSocket = window.WebSocket || window.MozWebSocket;
-  window.ws = new WebSocket('ws://193.166.24.212:1337');
+  window.ws = new WebSocket('ws://ufibp.tech:1337');
   ws.onopen = function () {
     // ws is opened and ready to use
     console.log('ws open')
