@@ -48,7 +48,7 @@ d3.floorplan.imagelayer = function() {
 			});
 		});
 	}
-	
+
 	images.xScale = function(scale) {
 		if (! arguments.length) return x;
 		x = scale;
