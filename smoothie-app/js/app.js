@@ -1,4 +1,4 @@
-var username='Han Xiao';
+var username='Hoang';
 
 $(function () {
     // if user is running mozilla then use it's built-in WebSocket
