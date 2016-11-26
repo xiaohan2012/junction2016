@@ -7,9 +7,14 @@ angular.module('starter.controllers', [])
   }).success(function (data) {
     $scope.temp = data;
   });
-  // $http.get('http://api.ufibp.tech:9876/buildingStats/temperature').then(function (data) {
-  //   console.log('data', data);
-  // });
+
+  var bar = new ProgressBar.Path('#heart-path', {
+    easing: 'easeInOut',
+    duration: 1400
+  });
+
+  bar.set(0);
+  bar.animate(0.9);
 })
 
 .controller('ChatsCtrl', function($scope, Chats) {
