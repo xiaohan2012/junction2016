@@ -260,10 +260,10 @@ wsServer.on('connect', function(connection) {
     	var type = data['type'];
     	if(data['type'] == 'id'){
             var visitor_name = data['id'];
-	    connection.send(JSON.stringify({
-		'type': 'msg',
-		'text': 'Hello, ' + visitor_name + '! You seem to have an appointment with '  + employee_name
-	    }));
+    	    connection.send(JSON.stringify({
+        		'type': 'msg',
+        		'text': 'Hello, ' + visitor_name + '! You seem to have an appointment with '  + employee_name
+    	    }));
             console.log('new id', data['id']);
 
             // check appointment
@@ -271,52 +271,50 @@ wsServer.on('connect', function(connection) {
             
             // send msg to employee
             controller.storage.users.get(employee_id, function(err, user) {
-        	if (!user) {
-        	    user = {
-        		id: employee_id,
-        	    };
-        	}
+            	if (!user) {
+            	    user = {
+            		id: employee_id,
+            	    };
+            	}
 
-        	user.name = 'Hoang';
+            	user.name = 'Hoang';
                 user.visitor_name = visitor_name; 
 
                 controller.storage.users.save(user, function(err,user){
                     console.log('user.visitor_name is saved');
                 });
 
-        	var token = process.env.token;
-        	bot.api.callAPI('chat.postMessage',
-        			{'token': token,
-        			 'channel': 'D36H7J9J4',
-        			 'text': user.visitor_name + ' wants to meet you in ' + time + '( ' + room + ')'},
-        			function(obj){
-        			    console.log(obj);						
+            	var token = process.env.token;
+            	bot.api.callAPI('chat.postMessage',
+            			{'token': token,
+            			 'channel': 'D36H7J9J4',
+            			 'text': user.visitor_name + ' wants to meet you in ' + time + '( ' + room + ')'},
+            			function(obj){
+            			    console.log(obj);						
 
-        			})
+            			})
 
-		controller.hears(("confirm"), 'direct_message,direct_mention,mention', function(bot,message) {
-		    controller.storage.users.get(employee_id, function(err, user){
-			bot.reply(message,
-				  'Great! ' + user.visitor_name + ' will meet you in ' + room + '!');
-		    });
-		    connection.send(JSON.stringify(
-			{'type': 'msg',
-			 'text': 'He is on his way. \nSee you in ' + room}
-		    ));
-		});		
-		
-		controller.hears(["(.*) mins"], 'direct_message,direct_mention,mention', function(bot,message) {
-		    var minutes = message.match[1];
-		    controller.storage.users.get(employee_id, function(err, user){
-			bot.reply(message,
-				  'Ok. ' + ' I will tell him and see you in ' + room + ' in ' + minutes + ' mins');
-			
-			connection.send(JSON.stringify(
-			    {'type': 'msg',
-			     'text': 'I just notified him. \nHe will be in ' + minutes + ' mins' }
-			));
-		    });    
-		});
+        		controller.hears(("confirm"), 'direct_message,direct_mention,mention', function(bot,message) {
+        			bot.reply(message,
+        				  'Great! ' + user.visitor_name + ' will meet you in ' + room + '!');
+        		    connection.send(JSON.stringify(
+                        {
+                            'type': 'msg',
+                            'text': 'He is on his way. \nSee you in ' + room
+                        }
+        		    ));
+        		});		
+        		
+        		controller.hears(["(.*) mins"], 'direct_message,direct_mention,mention', function(bot,message) {
+        		    var minutes = message.match[1];
+        			bot.reply(message,
+        				  'Ok. ' + ' I will tell him and see you in ' + room + ' in ' + minutes + ' mins');
+        			
+        			connection.send(JSON.stringify(
+        			    {'type': 'msg',
+        			     'text': 'I just notified him. \nHe will be in ' + minutes + ' mins' }
+        			));    
+        		});
 		
             });	    
     	}
