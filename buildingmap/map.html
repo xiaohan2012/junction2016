@@ -63,6 +63,7 @@
         width: 50.0
          }];
       map.addLayer(imagelayer)
+          .addLayer(pathplot)
 
       var tooltip_ini = d3.select("body")
         .append("div")
@@ -94,6 +95,8 @@
         mapdata[overlays.id()] = data.overlays;
         mapdata[vectorfield.id()] = data.vectorfield;
         mapdata[pathplot.id()] = data.pathplot;
+
+        console.log(data.pathplot)
         
        var svgcontainer = d3.select("#demo").append("svg")
           .attr("height", 487).attr("width",720)
@@ -115,9 +118,23 @@
                          .attr("fill", "#6495ED")
                          .on("mouseover", function(){return tooltip_end.style("visibility", "visible");})
                          .on("mousemove", function(){return tooltip_end.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
-                        .on("mouseout", function(){return tooltip_end.style("visibility", "hidden");});  
+                        .on("mouseout", function(){return tooltip_end.style("visibility", "hidden");}); 
+
+      d3.tsv("data/path.tsv", function(error, data) {
+        circle_ini.selectAll("line")
+            .data(data)
+           .enter()
+            .append("line")
+            .attr("x1", function(d) { 
+              console.log(100*d.x0)
+              return (100*d.x0); 
+            })
+            .attr("y1", function(d) { return (100*d.y0); })
+            .attr("stroke", "black");
+        });
 
       });
+
     }
 
     function drawmapsecondfloor(){

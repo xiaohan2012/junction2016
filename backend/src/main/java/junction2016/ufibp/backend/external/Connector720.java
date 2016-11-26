@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -24,12 +26,15 @@ public class Connector720 {
 
     private RestTemplate restTemplate = new BasicAuthRestTemplate(login, pass);
 
-    public String getTemp() {
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+
+
+    public Map getTemp() {
 
         TemperatureRequest720 req = new TemperatureRequest720();
         req.setAggregate("5m");
-        req.setFrom("2016-11-26T14:07:00");
-        req.setUntil("2016-11-26T15:07:00");
+        req.setFrom(LocalDateTime.now().minusHours(1).format(formatter));
+        req.setUntil(LocalDateTime.now().format(formatter));
 
         String reqUrl = serverUri+"?aggregate="+req.getAggregate()+"&from="+req.getFrom()+"&until="+req.getUntil();
 
@@ -37,11 +42,10 @@ public class Connector720 {
 
 
         List data = ((List)((Map)response.get("data")).get("measurements"));
-        Double temp = (Double)((Map)((Map)((Map)data.get(data.size()-1)).get("sensors")).get("temperature_celsius")).get("value_avg");
+        //Double temp = (Double)((Map)((Map)((Map)data.get(data.size()-1)).get("sensors")).get("temperature_celsius")).get("value_avg");
+        Map sensors = (Map)((Map)data.get(data.size()-1)).get("sensors");
 
-        log.error("TEMP TEMP: {}", temp.toString().substring(0,6));
-
-        return temp.toString().substring(0,6);
+        return sensors;
     }
 
 
