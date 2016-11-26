@@ -52,7 +52,7 @@ angular.module('starter.controllers', [])
   var that = this;
 
   window.WebSocket = window.WebSocket || window.MozWebSocket;
-  window.ws = new WebSocket('ws://ufibp.tech:1337');
+  window.ws = new WebSocket('ws://localhost:1337');
   ws.onopen = function () {
     // ws is opened and ready to use
     console.log('ws open')
