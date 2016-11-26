@@ -1,0 +1,60 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.4.0.RELEASE'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+apply plugin: 'spring-boot'
+apply plugin: 'application'
+
+// tag::repositories[]
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots/'
+    }
+}
+// end::repositories[]
+
+// tag::jar[]
+jar {
+    baseName = 'foib.backend'
+    version =  '0.1.0'
+}
+// end::jar[]
+
+group = 'junction2016'
+
+
+// tag::dependencies[]
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+
+    compile 'org.springframework.boot:spring-boot-starter'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    compile 'org.springframework.boot:spring-boot-starter-security'
+    compile 'org.apache.httpcomponents:httpclient'
+    compile 'joda-time:joda-time'
+    compile 'ch.qos.logback:logback-classic'
+    compile 'org.slf4j:slf4j-api'
+    compile 'org.projectlombok:lombok'
+    testCompile 'junit:junit'
+}
+// end::dependencies[]
+
+// tag::wrapper[]
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.0'
+}
+// end::wrapper[]
+
