@@ -38,7 +38,7 @@
     <div id="demo"> </div>
     <script type="text/javascript">
 
-    var xscale = d3.scale.linear()
+        var xscale = d3.scale.linear()
                    .domain([0,50.0])
                    .range([0,720]),
         yscale = d3.scale.linear()
@@ -52,6 +52,7 @@
         overlays = d3.floorplan.overlays().editMode(true),
         mapdata = {};
 
+
     function drawmap(map_to_display){
 
       mapdata[imagelayer.id()] = [{
@@ -61,25 +62,39 @@
         height: 63.79,
         width: 50.0
          }];
-
       map.addLayer(imagelayer)
        .addLayer(pathplot)
 
+      var tooltip = d3.select("body")
+        .append("div")
+        .style("position", "absolute")
+        .style("z-index", "25")
+        .style("visibility", "hidden")
+        .text("You are here!");
+
       d3.json("data/demo-data.json", function(data) {
+
         mapdata[heatmap.id()] = data.heatmap;
         mapdata[overlays.id()] = data.overlays;
         mapdata[vectorfield.id()] = data.vectorfield;
         mapdata[pathplot.id()] = data.pathplot;
         
-        d3.select("#demo").append("svg")
+       var svgcontainer = d3.select("#demo").append("svg")
           .attr("height", 487).attr("width",720)
           .datum(mapdata).call(map);
-      });
 
+      var circle = svgcontainer.append("circle")
+                         .attr("cx", 220)
+                         .attr("cy", 420)
+                         .attr("r", 10)
+                         .attr("fill", "#5F9EA0")
+                         .on("mouseover", function(){return tooltip.style("visibility", "visible");})
+                         .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+                        .on("mouseout", function(){return tooltip.style("visibility", "hidden");});  
+      });
     }
 
     drawmap("imgs/1stfloormap.jpg");
-
       d3.selectAll("#opts")
         .on('change', function() {
         var ID = d3.select(this).property('value');
@@ -90,7 +105,6 @@
         else if (ID == "2ndfloor"){
           d3.select("svg").remove();
           drawmap("imgs/2ndfloormap.jpg")
-
         }
                          
       });
