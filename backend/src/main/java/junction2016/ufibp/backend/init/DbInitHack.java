@@ -1,6 +1,8 @@
 package junction2016.ufibp.backend.init;
 
+import junction2016.ufibp.backend.model.GuestIdentity;
 import junction2016.ufibp.backend.model.WelcomeCard;
+import junction2016.ufibp.backend.repository.IdentityRepository;
 import junction2016.ufibp.backend.repository.WelcomeCardRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,9 @@ public class DbInitHack {
     @Autowired
     private WelcomeCardRepository welcomeCardRepository;
 
+    @Autowired
+    private IdentityRepository identityRepository;
+
     @PostConstruct
     public void createDbIfEmpty() {
 
@@ -27,20 +32,26 @@ public class DbInitHack {
         }
 
         //default welcome
-        WelcomeCard w1 = new WelcomeCard();
-        w1.setName("Building info");
-        w1.setContent("Temperature: 23, people in the building: 1234");
-        welcomeCardRepository.save(w1);
 
-        WelcomeCard w2 = new WelcomeCard();
-        w2.setName("Lunch");
-        w2.setContent("Pork Child Donut Cake Pizza");
-        welcomeCardRepository.save(w2);
+        //guests
+        GuestIdentity g1 = new GuestIdentity();
+        g1.setName("Me Myself");
+        g1.setIdentityProviderUrl("http://api.ufibp.tech/api/identity");
+        g1.setAuthToken("123");
+        identityRepository.save(g1);
 
-        WelcomeCard w3 = new WelcomeCard();
-        w3.setName("Interactive map");
-        w3.setContent("some html code here");
-        welcomeCardRepository.save(w3);
+        GuestIdentity g2 = new GuestIdentity();
+        g2.setName("Customer A");
+        g2.setIdentityProviderUrl("http://api.ufibp.tech/api/identity");
+        g2.setAuthToken("123");
+        identityRepository.save(g2);
+
+        GuestIdentity g3 = new GuestIdentity();
+        g3.setName("Employee B");
+        g3.setIdentityProviderUrl("http://api.ufibp.tech/api/identity");
+        g3.setAuthToken("123");
+        identityRepository.save(g3);
     }
+
 
 }
