@@ -38,3 +38,11 @@ Card have:
 Separate view, is just page served from server?
 
 
+
+QR example (coresponding QR also available as image in same folder):
+ 
+{"id":"lkdsfifds3242342", "identityUrl":"https://kjsjds.jsajds.tech/api/identity", "name":"Wanha Satama", "wlanName":"freewlan", "wlanPass":"", "welcomeUrl":"https://intranet:8080/welcome"}
+
+QR could be used to provide connection information to clients that don't have internet (e.g. travellers, or in development countries).
+
+
