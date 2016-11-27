@@ -13,7 +13,7 @@
 	padding:0;
 }
 
-.messages li:nth-child(even) {
+.messages li.right {
 	float:right;
 }
 
@@ -30,10 +30,11 @@
 	font-size:.875rem;
 }
 
-.messages li:nth-child(even) p {
+.messages li.right p {
 	background:#158ffe;
 	color:#fff;
 }
+
 
 .messages img {
 	display:block;

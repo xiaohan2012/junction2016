@@ -50,8 +50,14 @@ angular.module('starter.controllers', [])
  
   var messageIter = 0;
   $scope.messages = [
-    'hello, i\'m the Reception Bot, what can I help you?',
-    'hi'
+    {
+      'text': 'hello, i\'m the Reception Bot, what can I help you?',
+      'align': 'left'
+    },
+    {
+      'text': 'hi',
+      'align': 'right'
+    }
   ];
 
   var that = this;
@@ -73,14 +79,20 @@ angular.module('starter.controllers', [])
       console.log(json);
       console.log('that', this);
       console.log('scope', $scope);
-      $scope.messages.push(json.text);
+      $scope.messages.push({
+        'text':json.text,
+        'align': 'left'
+      });
       if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
           $scope.$apply();
       }
   };
 
   $scope.add = function (text) {
-    $scope.messages.push(text);
+    $scope.messages.push({
+        'text': text,
+        'align': 'right'
+      });
     var detection = $scope.detect(text);
     if (detection) {
       var id = detection.trim();
@@ -91,18 +103,30 @@ angular.module('starter.controllers', [])
             console.log('desk data', data);
             if (data.data.measurements.value) {
               var message = id + ' Occupied now!';
-              $scope.messages.push(message);    
+              $scope.messages.push({
+                'text': message,
+                'align': 'left'
+              });
             } else {
               var message = id + ' FREE now!';
-              $scope.messages.push(message);    
+              $scope.messages.push({
+                'text': message,
+                'align': 'left'
+              });    
             }
           }, function () {
             var message = 'Sorry, i can not get' + ' ' + id + 'information now';
-            $scope.messages.push(message);  
+            $scope.messages.push({
+                'text': message,
+                'align': 'left'
+              });  
           })
         } else {
           var message = 'Sorry, i can not find' + ' ' + id;
-          $scope.messages.push(message);
+          $scope.messages.push({
+                'text': message,
+                'align': 'left'
+              });
         }
       }
     }
