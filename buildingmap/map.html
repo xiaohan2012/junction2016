@@ -14,9 +14,14 @@
       margin-top:100px;
     }
 
+    #circle_ini{
+      position:relative;
+    }
+
     </style>
 
     <!-- add css external files-->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/d3.floorplan.css" media="screen">
 
     <!-- add js external files -->
@@ -29,8 +34,18 @@
     <script src="js/overlays.js" type="text/javascript"></script>
     <script src="js/pathplot.js" type="text/javascript"></script>
     <script src="js/vectorfield.js" type="text/javascript"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
   </head>
   <body>
+  <div class="container">
+    <div class="jumbotron">
+      <h1>Office map</h1> 
+    </div>
+  </div>
    <select id = "opts">
         <option value="1stfloor" selected="selected">1st floor indoor map</option>
         <option value="2ndfloor">2nd floor indoor map</option>
@@ -109,7 +124,7 @@
                          .attr("fill", "#DC143C")
                          .on("mouseover", function(){return tooltip_ini.style("visibility", "visible");})
                          .on("mousemove", function(){return tooltip_ini.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
-                        .on("mouseout", function(){return tooltip_ini.style("visibility", "hidden");});  
+                        .on("mouseout", function(){return tooltip_ini.style("visibility", "visible");});  
 
       var circle_end = svgcontainer.append("circle")
                          .attr("cx", 410)
@@ -118,21 +133,16 @@
                          .attr("fill", "#6495ED")
                          .on("mouseover", function(){return tooltip_end.style("visibility", "visible");})
                          .on("mousemove", function(){return tooltip_end.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
-                        .on("mouseout", function(){return tooltip_end.style("visibility", "hidden");}); 
+                        .on("mouseout", function(){return tooltip_end.style("visibility", "visible");}); 
 
-      d3.tsv("data/path.tsv", function(error, data) {
-        circle_ini.selectAll("line")
-            .data(data)
-           .enter()
-            .append("line")
-            .attr("x1", function(d) { 
-              console.log(100*d.x0)
-              return (100*d.x0); 
-            })
-            .attr("y1", function(d) { return (100*d.y0); })
-            .attr("stroke", "black");
-        });
-
+      var svg = svgcontainer
+              .append("line")
+              .style("stroke", "#3CB371")  // colour the line
+              .style("stroke-width", 3)
+              .attr("x1", 220)
+              .attr("y1", 420)
+              .attr("x2", 410)
+              .attr("y2", 70);
       });
 
     }
